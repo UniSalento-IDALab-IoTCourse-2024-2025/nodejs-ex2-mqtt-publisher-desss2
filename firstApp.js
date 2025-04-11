@@ -1,5 +1,5 @@
 //const sensorLib = require('node-dht-sensor'); // include existing module called ‘node-dht-sensor’
-const http = require('node:http');
+//const http = require('node:http');
 
 // Setup sensor, exit if failed
 //var sensorType = 11; // 11 for DHT11, 22 for DHT22 and AM2302
@@ -10,6 +10,13 @@ const http = require('node:http');
 //console.warn('Failed to initialize sensor');
 //process.exit(1);
 //}
+
+const mqtt=require('mqtt');
+var client = mqtt.connect("mqtt://mqtt.eclipseprojects.io",{clientId:"mqttjs01"}); 
+client.on("connect",function(){
+console.log("connected"); });
+client.on("error",function(error){ console.log("Can't connect"+error);
+});
 
 // Automatically update sensor value every 2 seconds
 //we use a nested function (function inside another function)
@@ -35,7 +42,10 @@ setInterval(function() {
 	      'Content-Length': Buffer.byteLength(postData),
 	},
 	};
+	client.publish("test-topic-handson/data", postData);
+}, 2000);
 
+/*
 	const req = http.request(options, (res) => {
 		res.setEncoding('utf8');
 		res.on('data', (chunk) => {
@@ -54,3 +64,4 @@ setInterval(function() {
 	req.write(postData);
 	req.end();
 }, 2000);
+*/
